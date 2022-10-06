@@ -1,60 +1,53 @@
-import React from 'react';
+import { useState } from 'react';
 import { Section } from './Section';
 import { FeedbackOptions } from './FeedbackOptions';
 import { Statistic } from './Statistics';
 import './feedback.css';
 
-class Feedback extends React.Component {
-  state = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
-  };
+export function Feedback() {
+  const [good, setGood] = useState(0);
+  const [neutral, setNeutral] = useState(0);
+  const [bad, setBad] = useState(0);
 
-  handleAddFeedback = event => {
-    const key = event.target.name;
-    this.setState(prevState => {
-      return { [key]: prevState[key] + 1 };
-    });
-  };
-
-  countTotalFeedback() {
-    const { good, neutral, bad } = this.state;
+  const countTotal = () => {
     return good + neutral + bad;
-  }
+  };
 
-  countPositiveFeedbackPercentage() {
-    const { good, neutral, bad } = this.state;
-    const total = good + neutral + bad;
+  const countPositiveFeedbackPercentage = good => {
+    const total = countTotal();
     if (!total) {
       return 0;
     }
     return Math.round((good / total) * 100);
-  }
+  };
 
-  render() {
-    const total = this.countTotalFeedback();
-    const positivePercentage = this.countPositiveFeedbackPercentage();
-    return (
-      <div className="feedback">
-        <Section title="Leave feedback please">
-          <FeedbackOptions
-            onAddFeedback={this.handleAddFeedback}
-            options={Object.keys(this.state)}
-          />
-        </Section>
-        <Section title="Statistics">
-          <Statistic
-            good={this.state.good}
-            neutral={this.state.neutral}
-            bad={this.state.bad}
-            total={total}
-            positivePercentage={positivePercentage}
-          />
-        </Section>
-      </div>
-    );
-  }
+  const handleAddFeedback = button => {
+    switch (button) {
+      case 'good':
+        return setGood(prevState => prevState + 1);
+      case 'neutral':
+        return setNeutral(prevState => prevState + 1);
+      case 'bad':
+        return setBad(prevState => prevState + 1);
+      default:
+        return;
+    }
+  };
+
+  return (
+    <div className="feedback">
+      <Section title="Leave feedback please">
+        <FeedbackOptions onAddFeedback={handleAddFeedback} />
+      </Section>
+      <Section title="Statistics">
+        <Statistic
+          good={good}
+          neutral={neutral}
+          bad={bad}
+          total={countTotal()}
+          positivePercentage={countPositiveFeedbackPercentage(good)}
+        />
+      </Section>
+    </div>
+  );
 }
-
-export { Feedback };

@@ -1,20 +1,24 @@
 import PropTypes from 'prop-types';
 import './feedback.css';
 
-const FeedbackOptions = ({ options, onAddFeedback }) => {
+const FeedbackOptions = ({ onAddFeedback }) => {
   return (
     <ul className="feedback__list">
-      {options.map(key => (
-        <button
-          className="btn"
-          key={key}
-          name={key}
-          type="button"
-          onClick={onAddFeedback}
-        >
-          {key.toUpperCase()}
+      <li>
+        <button className="btn" onClick={() => onAddFeedback('good')}>
+          Good
         </button>
-      ))}
+      </li>
+      <li>
+        <button className="btn" onClick={() => onAddFeedback('neutral')}>
+          Neutral
+        </button>
+      </li>
+      <li>
+        <button className="btn" onClick={() => onAddFeedback('bad')}>
+          Bad
+        </button>
+      </li>
     </ul>
   );
 };
